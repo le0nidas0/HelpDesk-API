@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8
+    container_name: mysql-helpdesk
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: orion
+      MYSQL_DATABASE: helpdesk-api
+      MYSQL_USER: helpdesk_user
+      MYSQL_PASSWORD: helpdesk_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  app:
+    build: .
+    container_name: helpdesk-app
+    restart: always
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/helpdesk-api?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: helpdesk_user
+      SPRING_DATASOURCE_PASSWORD: helpdesk_pass
+      SPRING_MAIL_HOST: smtp.gmail.com
+      SPRING_MAIL_PORT: 587
+      SPRING_MAIL_USERNAME: helpdeskapi9@gmail.com
+      SPRING_MAIL_PASSWORD: cffq zrak fvqq qaqn
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: "true"
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: "true"
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_REQUIRED: "true"
+    ports:
+      - "8080:8080"
+
+volumes:
+  db_data:
